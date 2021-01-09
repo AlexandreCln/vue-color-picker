@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8"> 
-  <title>Vue</title>
+  <title>Vue color picker</title>
   <script type="text/javascript" src="./node_modules/vue/dist/vue.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="./main.css">
@@ -10,39 +10,39 @@
 <body>
   <div id="app" class="container">
     <div class="row">
-      <div class="col-6">
+      <div class="sm-col-3">
         <div class="col-12">
           <hr />
           <div class="form-group">
-            <label>Vert : </label>
-            <input class="form-control" type="number" />
+            <label>Red :</label>
+            <input class="form-control" type="number" v-model="red" />
           </div>
           <hr />
           <div class="form-group">
-            <label>Bleu : </label>
-            <input class="form-control" type="number" />
+            <label>Green :</label>
+            <input class="form-control" type="number" v-model="green" />
           </div>
           <hr />
           <div class="form-group">
-            <label>Rouge :</label>
-            <input class="form-control" type="number" />
+            <label>Blue :</label>
+            <input class="form-control" type="number" v-model="blue" />
           </div>
           <hr />
           <div class="col-12">
-            <button class="btn btn-primary">Sauvegarder</button>
-            <button class="btn btn-secondary">Annuler</button>
+            <button class="btn btn-primary" @click="addColor()">Add</button>
+            <button class="btn btn-secondary" @click="resetColors()">Reset</button>
           </div>
           <hr />
-            <h3> Nombre de carrés : </h3>
+            <h3>Colors count : {{ prevColorsCount }}</h3>
           <hr />
-          <div class="col-12">
-            <div class="prevsquare"></div>
+          <div class="col-12" v-if="prevColorsCount">
+            <div class="prev-color" v-for="color in prevColors" :style="{ 'background-color' : color }" @click="mainColor=color"></div>
           </div>
-          <h3 > Ajouter des couleurs !</h3>
+          <h3 v-else >Add some colors !</h3>
         </div>
       </div>
       <div class="col-6">
-        <div class="square mx-auto" ></div>
+        <div class="main-color mx-auto" :style="{ 'background-color' : mainColor }"></div>
       </div>
     </div>
   </div>
@@ -51,6 +51,30 @@
     new Vue({
       el:'#app',
       data: {
+        red: 0,
+        green: 0,
+        blue: 0,
+        prevColors: [], 
+        mainColor: ''    
+      },
+      methods: {
+        addColor() {
+          this.prevColors.push(`rgb(${this.red}, ${this.green}, ${this.blue})`);
+          this.resetInputs();
+        },
+        resetColors() {
+          this.prevColors = [];
+          this.mainColor = ''
+          this.resetInputs();
+        },
+        resetInputs() {
+          this.red = this.green = this.blue = 0;
+        },
+      },
+      computed: {  
+        prevColorsCount() {
+          return this.prevColors.length;
+        }
       }
     })
   </script>
